@@ -1,0 +1,142 @@
+# PIPELINE DEFINITION
+# Name: train-california-housing-price-predictor
+components:
+  comp-importer:
+    executorLabel: exec-importer
+    inputDefinitions:
+      parameters:
+        uri:
+          parameterType: STRING
+    outputDefinitions:
+      artifacts:
+        artifact:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+  comp-train-component:
+    executorLabel: exec-train-component
+    inputDefinitions:
+      artifacts:
+        input_data_dir:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        model_output_filename:
+          parameterType: STRING
+        scaler_output_filename:
+          parameterType: STRING
+        train_data_file_name:
+          parameterType: STRING
+    outputDefinitions:
+      artifacts:
+        artifact_output_dir:
+          artifactType:
+            schemaTitle: system.Artifact
+            schemaVersion: 0.0.1
+deploymentSpec:
+  executors:
+    exec-importer:
+      importer:
+        artifactUri:
+          constant: minio://mlpipeline/v2/artifacts/pipeline/hw-ingestion-pipeline/<paste
+            from HW>
+        typeSchema:
+          schemaTitle: system.Dataset
+          schemaVersion: 0.0.1
+    exec-train-component:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - train_component
+        command:
+        - sh
+        - -c
+        - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
+          \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
+          \ python3 -m pip install --quiet     --no-warn-script-location 'pandas==2.0.3'\
+          \ 'scikit-learn==1.3.0' 'joblib==1.3.2' 'urllib3==1.25.11' 'kfp==2.0.0-beta.15'\
+          \ && \"$0\" \"$@\"\n"
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          python3 -m kfp.components.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef train_component(\n    input_data_dir: dsl.Input[dsl.Dataset],\n\
+          \    artifact_output_dir: dsl.Output[dsl.Artifact],\n    train_data_file_name:\
+          \ str,\n    model_output_filename: str,\n    scaler_output_filename: str\n\
+          ) -> None:\n    # Define imports and constants\n    # Because KFP Python\
+          \ Lightweight components must be hermetic\n    import os\n    from sklearn.preprocessing\
+          \ import StandardScaler\n    from sklearn.linear_model import Lasso\n  \
+          \  import pandas as pd\n    import joblib\n\n    RANDOM_SEED = 42\n    TARGET_COLUMN\
+          \ = \"MedHouseVal\"\n    MODEL_ARGS = {\n        \"alpha\": 0.01,\n    \
+          \    \"fit_intercept\": True,\n        \"random_state\": RANDOM_SEED\n \
+          \   }\n\n    # Load and process raw training data\n    print(f\"Creating\
+          \ output dir: {artifact_output_dir.path}\")\n    os.makedirs(artifact_output_dir.path,\
+          \ exist_ok=True)\n\n    train_data_path = os.path.join(input_data_dir.path,\
+          \ train_data_file_name)\n    print(f\"Loading train data from: {train_data_path}\"\
+          )\n    train_df = pd.read_csv()\n\n    print(\"Separating features and labels\"\
+          )\n    X_train = train_df.copy()\n    y_train = X_train.pop(TARGET_COLUMN)\n\
+          \n    print(\"Scaling features\")\n    scaler = StandardScaler()\n    X_train_scaled\
+          \ = scaler.fit_transform(X_train)\n\n    scaler_save_path = os.path.join(artifact_output_dir.path,\
+          \ scaler_output_filename)\n    print(f\"Saving scaler to: {scaler_save_path}\"\
+          )\n    joblib.dump(scaler, scaler_save_path)\n\n    # Train model on processed\
+          \ data\n    print(\"Defining and training model\")\n    model = Lasso(**MODEL_ARGS)\n\
+          \    model.fit(X_train_scaled, y_train)\n    print(f\"Model trained: {model.__str__()}\"\
+          )\n    print(f\"Trained model weights: {model.coef_}\")\n\n    model_save_path\
+          \ = os.path.join(artifact_output_dir.path, model_output_filename)\n    print(f\"\
+          Saving trained model to: {model_save_path}\")\n    joblib.dump(model, model_save_path)\n\
+          \n"
+        image: python:3.9-bookworm
+pipelineInfo:
+  name: train-california-housing-price-predictor
+root:
+  dag:
+    tasks:
+      importer:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-importer
+        inputs:
+          parameters:
+            uri:
+              runtimeValue:
+                constant: minio://mlpipeline/v2/artifacts/pipeline/hw-ingestion-pipeline/<paste
+                  from HW>
+        taskInfo:
+          name: importer
+      train-component:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-train-component
+        dependentTasks:
+        - importer
+        inputs:
+          artifacts:
+            input_data_dir:
+              taskOutputArtifact:
+                outputArtifactKey: artifact
+                producerTask: importer
+          parameters:
+            model_output_filename:
+              runtimeValue:
+                constant: model.joblib
+            scaler_output_filename:
+              runtimeValue:
+                constant: scaler.joblib
+            train_data_file_name:
+              runtimeValue:
+                constant: train.csv
+        taskInfo:
+          name: train-model
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.0.0-beta.15
