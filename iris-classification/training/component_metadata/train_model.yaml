@@ -1,0 +1,102 @@
+# PIPELINE DEFINITION
+# Name: train-model
+# Inputs:
+#    data_artifact_dir: system.Artifact
+#    model_args: dict
+#    model_output_filename: str
+#    scaled_data_file_name: str
+# Outputs:
+#    model_output_dir: system.Model
+components:
+  comp-train-model:
+    executorLabel: exec-train-model
+    inputDefinitions:
+      artifacts:
+        data_artifact_dir:
+          artifactType:
+            schemaTitle: system.Artifact
+            schemaVersion: 0.0.1
+      parameters:
+        model_args:
+          parameterType: STRUCT
+        model_output_filename:
+          parameterType: STRING
+        scaled_data_file_name:
+          parameterType: STRING
+    outputDefinitions:
+      artifacts:
+        model_output_dir:
+          artifactType:
+            schemaTitle: system.Model
+            schemaVersion: 0.0.1
+deploymentSpec:
+  executors:
+    exec-train-model:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - train_model
+        command:
+        - sh
+        - -c
+        - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
+          \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
+          \ python3 -m pip install --quiet     --no-warn-script-location 'pandas==2.0.3'\
+          \ 'scikit-learn==1.3.0' 'joblib==1.3.2' 'urllib3==1.25.11' && \"$0\" \"\
+          $@\"\n"
+        - python3
+        - -m
+        - kfp.components.executor_main
+        image: 637423190872.dkr.ecr.eu-west-1.amazonaws.com/highwind/386cfa8b-bef8-4555-9eaa-583e1e1c9ac0/bbcc9c05-8eb9-4934-b611-06129a5a7c41:v2
+pipelineInfo:
+  name: train-model
+root:
+  dag:
+    outputs:
+      artifacts:
+        model_output_dir:
+          artifactSelectors:
+          - outputArtifactKey: model_output_dir
+            producerSubtask: train-model
+    tasks:
+      train-model:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-train-model
+        inputs:
+          artifacts:
+            data_artifact_dir:
+              componentInputArtifact: data_artifact_dir
+          parameters:
+            model_args:
+              componentInputParameter: model_args
+            model_output_filename:
+              componentInputParameter: model_output_filename
+            scaled_data_file_name:
+              componentInputParameter: scaled_data_file_name
+        taskInfo:
+          name: train-model
+  inputDefinitions:
+    artifacts:
+      data_artifact_dir:
+        artifactType:
+          schemaTitle: system.Artifact
+          schemaVersion: 0.0.1
+    parameters:
+      model_args:
+        parameterType: STRUCT
+      model_output_filename:
+        parameterType: STRING
+      scaled_data_file_name:
+        parameterType: STRING
+  outputDefinitions:
+    artifacts:
+      model_output_dir:
+        artifactType:
+          schemaTitle: system.Model
+          schemaVersion: 0.0.1
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.0.0-beta.15

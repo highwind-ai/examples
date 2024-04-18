@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  dev:
+    image: 637423190872.dkr.ecr.eu-west-1.amazonaws.com/highwind/386cfa8b-bef8-4555-9eaa-583e1e1c9ac0/bbcc9c05-8eb9-4934-b611-06129a5a7c41:v1
+    volumes:
+      - ../data/:/minio/mlpipeline/v2/artifacts/pipeline/hw-ingestion-pipeline/2e06de2f-e18b-453f-9a24-fbdbbe084283/download-data/output_path/
+    command: 
+      #- python3 -m kfp.components.executor_main --function_to_execute process_data --executor_input "{\"inputs\":{\"artifacts\":{\"input_data_dir\":{\"artifacts\":[{\"name\":\"5\",\"type\":{\"instanceSchema\":\"\"},\"uri\":\"minio://mlpipeline/v2/artifacts/pipeline/hw-ingestion-pipeline/2e06de2f-e18b-453f-9a24-fbdbbe084283/download-data/output_path\",\"metadata\":{}}]}},\"parameterValues\":{\"scaled_data_output_filename\":\"scaled_train.csv\",\"scaler_output_filename\":\"scaler.joblib\",\"train_data_file_name\":\"train.csv\"}},\"outputs\":{\"artifacts\":{\"artifact_output_dir\":{\"artifacts\":[{\"type\":{\"schemaTitle\":\"system.Artifact\",\"schemaVersion\":\"0.0.1\"},\"uri\":\"minio://mlpipeline/v2/artifacts/pipeline/iris-train-01/84f7f333-95b4-4716-80dd-35b378d3a709/process-data/artifact_output_dir\"}]}},\"outputFile\":\"/tmp/kfp_outputs/output_metadata.json\"}}"
+      - tail
+      - -f
+      - /dev/null

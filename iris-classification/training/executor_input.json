@@ -1,0 +1,39 @@
+{
+    "inputs": {
+        "artifacts": {
+            "input_data_dir": {
+                "artifacts": [
+                    {
+                        "name": "5",
+                        "type": {
+                            "instanceSchema": ""
+                        },
+                        "uri": "minio://mlpipeline/v2/artifacts/pipeline/hw-ingestion-pipeline/2e06de2f-e18b-453f-9a24-fbdbbe084283/download-data/output_path",
+                        "metadata": {}
+                    }
+                ]
+            }
+        },
+        "parameterValues": {
+            "scaled_data_output_filename": "scaled_train.csv",
+            "scaler_output_filename": "scaler.joblib",
+            "train_data_file_name": "train.csv"
+        }
+    },
+    "outputs": {
+        "artifacts": {
+            "artifact_output_dir": {
+                "artifacts": [
+                    {
+                        "type": {
+                            "schemaTitle": "system.Artifact",
+                            "schemaVersion": "0.0.1"
+                        },
+                        "uri": "minio://mlpipeline/v2/artifacts/pipeline/iris-train-01/84f7f333-95b4-4716-80dd-35b378d3a709/process-data/artifact_output_dir"
+                    }
+                ]
+            }
+        },
+        "outputFile": "/tmp/kfp_outputs/output_metadata.json"
+    }
+}
