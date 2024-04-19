@@ -1,19 +1,27 @@
 import re
 import argparse
 from transformers import AutoTokenizer, TFAutoModelForSeq2SeqLM
-from kserve import Model, ModelServer, model_server, InferRequest, InferOutput, InferResponse
+from kserve import (
+    Model,
+    ModelServer,
+    model_server,
+    InferRequest,
+    InferOutput,
+    InferResponse,
+)
 from kserve.utils.utils import generate_uuid
 
 MODEL_DIR = "/app/saved_model"
 CHARS_TO_REMOVE_REGEX = '[!"&\(\),-./:;=?+.\n\[\]]'
-PREFIX = "translate Dyula to French: " # Model's inference command
+PREFIX = "translate Dyula to French: "  # Model's inference command
 MODEL_KWARGS = {
-    "do_sample":True,
+    "do_sample": True,
     "max_new_tokens": 40,
-    "top_k":30,
-    "top_p":0.95,
-    "temperature":1.0
+    "top_k": 30,
+    "top_p": 0.95,
+    "temperature": 1.0,
 }
+
 
 def clean_text(text: str) -> str:
     """
@@ -52,15 +60,18 @@ class MyModel(Model):
         output = self.model.generate(input, **MODEL_KWARGS)
         translation = self.tokenizer.decode(output[0], skip_special_tokens=True)
         response_id = generate_uuid()
-        infer_output = InferOutput(name="output-0", shape=[1], datatype="STR", data=[translation])
-        infer_response = InferResponse(model_name=self.name, infer_outputs=[infer_output], response_id=response_id)
+        infer_output = InferOutput(
+            name="output-0", shape=[1], datatype="STR", data=[translation]
+        )
+        infer_response = InferResponse(
+            model_name=self.name, infer_outputs=[infer_output], response_id=response_id
+        )
         return infer_response
+
 
 parser = argparse.ArgumentParser(parents=[model_server.parser])
 parser.add_argument(
-    "--model_name",
-    default="model",
-    help="The name that the model is served under."
+    "--model_name", default="model", help="The name that the model is served under."
 )
 args, _ = parser.parse_known_args()
 
