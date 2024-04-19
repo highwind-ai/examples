@@ -1,0 +1,11 @@
+{
+    "inputs": [
+        {
+            "name": "input-0",
+            "shape": [10],
+            "datatype": "BYTES",
+            "parameters": null,
+            "data": ["i tɔgɔ bi cogodɔ"]
+        }
+    ]
+}
