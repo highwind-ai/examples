@@ -1,0 +1,177 @@
+# PIPELINE DEFINITION
+# Name: train-iris-classifier
+components:
+  comp-importer:
+    executorLabel: exec-importer
+    inputDefinitions:
+      parameters:
+        uri:
+          parameterType: STRING
+    outputDefinitions:
+      artifacts:
+        artifact:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+  comp-process-data:
+    executorLabel: exec-process-data
+    inputDefinitions:
+      artifacts:
+        input_data_dir:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        scaled_data_output_filename:
+          parameterType: STRING
+        scaler_output_filename:
+          parameterType: STRING
+        train_data_file_name:
+          parameterType: STRING
+    outputDefinitions:
+      artifacts:
+        artifact_output_dir:
+          artifactType:
+            schemaTitle: system.Artifact
+            schemaVersion: 0.0.1
+  comp-train-model:
+    executorLabel: exec-train-model
+    inputDefinitions:
+      artifacts:
+        data_artifact_dir:
+          artifactType:
+            schemaTitle: system.Artifact
+            schemaVersion: 0.0.1
+      parameters:
+        model_args:
+          parameterType: STRUCT
+        model_output_filename:
+          parameterType: STRING
+        scaled_data_file_name:
+          parameterType: STRING
+    outputDefinitions:
+      artifacts:
+        model_output_dir:
+          artifactType:
+            schemaTitle: system.Model
+            schemaVersion: 0.0.1
+deploymentSpec:
+  executors:
+    exec-importer:
+      importer:
+        artifactUri:
+          constant: minio://mlpipeline/v2/artifacts/pipeline/hw-ingestion-pipeline/2e06de2f-e18b-453f-9a24-fbdbbe084283/download-data/output_path
+        typeSchema:
+          schemaTitle: system.Dataset
+          schemaVersion: 0.0.1
+    exec-process-data:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - process_data
+        command:
+        - sh
+        - -c
+        - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
+          \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
+          \ python3 -m pip install --quiet     --no-warn-script-location 'pandas==2.0.3'\
+          \ 'scikit-learn==1.3.0' 'joblib==1.3.2' 'urllib3==1.25.11' && \"$0\" \"\
+          $@\"\n"
+        - python3
+        - -m
+        - kfp.components.executor_main
+        image: 637423190872.dkr.ecr.eu-west-1.amazonaws.com/highwind/386cfa8b-bef8-4555-9eaa-583e1e1c9ac0/bbcc9c05-8eb9-4934-b611-06129a5a7c41:v2
+    exec-train-model:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - train_model
+        command:
+        - sh
+        - -c
+        - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
+          \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
+          \ python3 -m pip install --quiet     --no-warn-script-location 'pandas==2.0.3'\
+          \ 'scikit-learn==1.3.0' 'joblib==1.3.2' 'urllib3==1.25.11' && \"$0\" \"\
+          $@\"\n"
+        - python3
+        - -m
+        - kfp.components.executor_main
+        image: 637423190872.dkr.ecr.eu-west-1.amazonaws.com/highwind/386cfa8b-bef8-4555-9eaa-583e1e1c9ac0/bbcc9c05-8eb9-4934-b611-06129a5a7c41:v2
+pipelineInfo:
+  name: train-iris-classifier
+root:
+  dag:
+    tasks:
+      importer:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-importer
+        inputs:
+          parameters:
+            uri:
+              runtimeValue:
+                constant: minio://mlpipeline/v2/artifacts/pipeline/hw-ingestion-pipeline/2e06de2f-e18b-453f-9a24-fbdbbe084283/download-data/output_path
+        taskInfo:
+          name: importer
+      process-data:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-process-data
+        dependentTasks:
+        - importer
+        inputs:
+          artifacts:
+            input_data_dir:
+              taskOutputArtifact:
+                outputArtifactKey: artifact
+                producerTask: importer
+          parameters:
+            scaled_data_output_filename:
+              runtimeValue:
+                constant: scaled_train.csv
+            scaler_output_filename:
+              runtimeValue:
+                constant: scaler.joblib
+            train_data_file_name:
+              runtimeValue:
+                constant: train.csv
+        taskInfo:
+          name: process-data
+      train-model:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-train-model
+        dependentTasks:
+        - process-data
+        inputs:
+          artifacts:
+            data_artifact_dir:
+              taskOutputArtifact:
+                outputArtifactKey: artifact_output_dir
+                producerTask: process-data
+          parameters:
+            model_args:
+              runtimeValue:
+                constant:
+                  C: 1.0
+                  fit_intercept: 1.0
+                  random_state: 42.0
+                  solver: lbfgs
+            model_output_filename:
+              runtimeValue:
+                constant: model.joblib
+            scaled_data_file_name:
+              runtimeValue:
+                constant: scaled_train.csv
+        taskInfo:
+          name: train-model
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.0.0-beta.15
