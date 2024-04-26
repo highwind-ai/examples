@@ -55,7 +55,7 @@
 7. **OPTIONAL**: Local testing of the KFP pipeline
    - **NB:** Please see Highwind user manual for local testing steps
    - This step is optional, but if your pipeline runs successfully locally, you can then proceed to upload the generated IR YAML file to Highwind
-   - Ensure you swicth your kfp version from `2.7.0` back to `2.0.0b15` prior to generating the IR YAML file as local testing requires kfp version `2.7.0`.
+   - Ensure you switch your kfp version from `2.7.0` back to `2.0.0b15` prior to generating the IR YAML file as local testing requires kfp version `2.7.0`.
 
 
 ## Kubeflow Caveats
@@ -81,6 +81,8 @@
 
 2. **Image push commands and Image URI**
  - Please refer to the [Highwind user manual](https://docs.highwind.ai/) within the `Tutorials` tab for essential steps on retrieving and executing the Docker push commands and obtaining the image URI.
+
+ - After following the instructions from the user manual, proceed to copy the `Image URI` and add it to the target_image in your pipeline.py or if you're doing local testing then in your pipeline-local.py script
 
 **NB**: You need two target images when testing locally and when generating your IR YAML file
  - Loacal testing image: The target image for the local `pipeline-local.py`script requires the KFP version to be `2.7.0`
