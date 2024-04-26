@@ -66,8 +66,7 @@
 
 
 ## Python Containerised Examples
-1. Machine Translation
-2. Iris Classification
+1. Iris Classification
 
 ## Getting the target image uri from Highwind
 1. **Create an Asset - `Docker repo`**
