@@ -1,11 +1,11 @@
+"""Kserve inference script."""
+
 import argparse
-import json
 import os
 from typing import Dict
 
 import joblib
 import numpy as np
-import pandas as pd
 from kserve import (
     InferOutput,
     InferRequest,
@@ -20,8 +20,10 @@ ARTIFACT_SAVE_DIR = "./saved_model/"
 
 
 class MyModel(Model):
+    """Kserve inference implementation of model."""
 
     def __init__(self, name: str):
+        """Initialise model."""
         super().__init__(name)
         self.name = name
         self.model = None
@@ -30,6 +32,7 @@ class MyModel(Model):
         self.load()
 
     def load(self):
+        """Reconstitute model from disk."""
         # Load scaler and model
         self.scaler = joblib.load(os.path.join(ARTIFACT_SAVE_DIR, "scaler.joblib"))
         self.model = joblib.load(os.path.join(ARTIFACT_SAVE_DIR, "model.joblib"))
@@ -38,6 +41,7 @@ class MyModel(Model):
     def preprocess(
         self, payload: InferRequest, headers: Dict[str, str] = None
     ) -> np.ndarray:
+        """Preprocess inference request."""
         # Get data from payload
         infer_input = payload.inputs[0]
         raw_data = np.array(infer_input.data)
@@ -51,6 +55,7 @@ class MyModel(Model):
     def predict(
         self, data: np.ndarray, headers: Dict[str, str] = None
     ) -> InferResponse:
+        """Pass inference request to model to make prediction."""
         response_id = generate_uuid()
         result = self.model.predict(data)
         infer_output = InferOutput(
