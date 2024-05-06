@@ -1,15 +1,16 @@
-import re
 import argparse
-from transformers import AutoTokenizer, TFAutoModelForSeq2SeqLM
+import re
+
 from kserve import (
+    InferOutput,
+    InferRequest,
+    InferResponse,
     Model,
     ModelServer,
     model_server,
-    InferRequest,
-    InferOutput,
-    InferResponse,
 )
 from kserve.utils.utils import generate_uuid
+from transformers import AutoTokenizer, TFAutoModelForSeq2SeqLM
 
 MODEL_DIR = "/app/saved_model"
 CHARS_TO_REMOVE_REGEX = '[!"&\(\),-./:;=?+.\n\[\]]'
