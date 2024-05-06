@@ -64,8 +64,8 @@ class MyModel(Model):
     def predict(self, data: str, *args, **kwargs) -> InferResponse:
         """Pass inference request to model to make prediction."""
         # Model prediction preprocessed sentence
-        input = self.tokenizer(data, return_tensors="tf").input_ids
-        output = self.model.generate(input, **MODEL_KWARGS)
+        inference_input = self.tokenizer(data, return_tensors="tf").input_ids
+        output = self.model.generate(inference_input, **MODEL_KWARGS)
         translation = self.tokenizer.decode(output[0], skip_special_tokens=True)
         response_id = generate_uuid()
         infer_output = InferOutput(
