@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  iris_inference_util:
+    container_name: dyu_fr_inference_util
+    image: local/highwind-examples/dyu-fr-inference:latest
+    command: --model_name=model
+    working_dir: /app
+    ports:
+      - "8080:8080"
