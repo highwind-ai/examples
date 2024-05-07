@@ -1,4 +1,4 @@
-# Translate Dyula to French (Hugging Face)
+# Translate Dyula to French (JoeyNMT)
 
 An example of a machine translation model that translates Dyula to French using the [JoeyNMT framework](https://github.com/joeynmt/joeynmt).
 
