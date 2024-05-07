@@ -2,5 +2,6 @@
 torch==2.2.1
 joeynmt==2.3.0
 datasets==2.18.0
+huggingface_hub==0.22.2
 pandas==1.5.3
 ipykernel==6.29.4
