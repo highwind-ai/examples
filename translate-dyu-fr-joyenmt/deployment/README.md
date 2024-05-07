@@ -14,12 +14,12 @@ This step builds the Kserve predictor image that contains your model.
 
     > 💡 Note that when running the `01-train.ipynb` notebook, several model checkpoints, vocabulary files, tokeniser models, etc. are saved. These are not all necessary for baking into the serve container for inference. Only the necessary files from this set are copied to a folder called `lean_model`, which is used to construct the serving container. The essential files include the following:
     >
-    > - Best model checkpoint (e.g. `510.ckpt`)
+    > - Best model checkpoint (e.g. `510.ckpt` -> rename to `best.ckpt`)
     > - JoyNMT config file (`config.yaml`)
     > - Tokenizer (`sp.model`)
     > - Vocabulary file (`vocab.txt`)
 
-    > 💡 Remember to change the paths in the config.yml file to point to paths in the serving container.
+    > 💡 Remember to change the paths in the config.yml file to point to paths in the serving container (e.g. `/app/saved_model`, check the Dockerfile).
 
     ```bash
     cp -R ../saved_model/lean_model ./saved_model
