@@ -21,6 +21,12 @@ This step builds the Kserve predictor image that contains your model.
 
     > 💡 Remember to change the paths in the config.yml file to point to paths in the serving container (e.g. `/app/saved_model`, check the Dockerfile).
 
+    > 💡 Note when downloading the model from HuggingFace via the `02-inference.ipynb` notebook and you see the file called `best.ckpt` has a symbolic link then please proceed to run the following command, to replace the link with actual model, ensuring you're within the `translate-dyu-fr-joyenmt/saved_model/lean_model` directory.
+    >
+    > ```bash
+    > mv best.ckpt _best.ckpt && mv $(readlink -f _best.ckpt) best.ckpt && rm _best.ckpt
+    > ```
+
     ```bash
     cp -R ../saved_model/lean_model ./saved_model
     ```
