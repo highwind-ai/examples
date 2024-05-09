@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "training"
+version = "0.1.0"
+description = "HuggingFace example for machine translation"
+authors = ["Harry Lee <harry@melio.ai>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+kfp = {extras = ["all"], version = "2.0.0b15"}
+urllib3 = "1.26"
+requests-toolbelt = "0.10.1"
+transformers = "^4.38.2"
+datasets = "^2.18.0"
+numpy = "^1.26.4"
+yq = "^3.2.3"
+docker = "^7.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

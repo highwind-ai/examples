@@ -1,0 +1,64 @@
+# PIPELINE DEFINITION
+# Name: tensorflow-huggingface-machine-translation
+# Outputs:
+#    Output: system.Model
+components:
+  comp-ml-process:
+    executorLabel: exec-ml-process
+    outputDefinitions:
+      artifacts:
+        model_path:
+          artifactType:
+            schemaTitle: system.Model
+            schemaVersion: 0.0.1
+deploymentSpec:
+  executors:
+    exec-ml-process:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - ml_process
+        command:
+        - sh
+        - -c
+        - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
+          \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
+          \ python3 -m pip install --quiet     --no-warn-script-location 'tensorflow==2.15.0'\
+          \ 'tf-keras==2.15.0' 'urllib3==1.26.0  ' 'requests-toolbelt==0.10.1' 'transformers==4.39.3'\
+          \ 'datasets==2.18.0' 'numpy==1.26.4' 'yq==3.2.3' 'docker==7.0.0' && \"$0\"\
+          \ \"$@\"\n"
+        - python3
+        - -m
+        - kfp.components.executor_main
+        image: 637423190872.dkr.ecr.eu-west-1.amazonaws.com/highwind/ef620ece-2b04-4f7e-8932-31dd3ba63e03/7a0550a8-b644-4267-b2be-85977ab21ff0:2-0-0
+        resources:
+          memoryLimit: 6.0
+          memoryRequest: 6.0
+pipelineInfo:
+  name: tensorflow-huggingface-machine-translation
+root:
+  dag:
+    outputs:
+      artifacts:
+        Output:
+          artifactSelectors:
+          - outputArtifactKey: model_path
+            producerSubtask: ml-process
+    tasks:
+      ml-process:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-ml-process
+        taskInfo:
+          name: ml-process
+  outputDefinitions:
+    artifacts:
+      Output:
+        artifactType:
+          schemaTitle: system.Model
+          schemaVersion: 0.0.1
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.0.0-beta.15

@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  machine_translation_custom_util:
+    container_name: machine_translation_custom_util
+    image: local/highwind-examples/machine-translation-custom-predictor:latest
+    # platform: linux/amd64
+    command: --model_name=model
+    working_dir: /app
+    ports:
+      - "8080:8080"
