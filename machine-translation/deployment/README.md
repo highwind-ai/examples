@@ -29,6 +29,8 @@ This folder contains the resources required for deploying the trained model onto
     docker compose logs
     ```
 
+    - **NB:** Please give this a few seconds before running the `curl` command below
+
 1. Finally, send a payload to your model to test its response. To do this, use the `curl` cmmand to send a `POST` request with an example JSON payload.
 
     >  Run this from another terminal (remember to navigate to this folder first)
