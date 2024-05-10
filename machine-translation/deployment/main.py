@@ -32,7 +32,7 @@ class MachineTranslation(Model):
         self.ready = True
 
 
-    def predict(self, payload: InferRequest) -> InferResponse:
+    def predict(self, payload: InferRequest, *args, **kwargs) -> InferResponse:
         """Pass inference request to model to make prediction."""
         print("Starting predict..")
         print(f"{payload.inputs[0].data[0]}")
