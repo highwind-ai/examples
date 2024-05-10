@@ -17,7 +17,7 @@ An example of a machine translation model that translates English to French. Thi
     > Make sure you uncomment the `ipykernel` requirement in the `requirements.txt` file before running the commands below if you want to run the inference notebook.
 
     ```shell
-    # Use Python 3.11
+    # Use Python 3.10
 
     # Initial setup
     python -m venv .serve.venv && source .serve.venv/bin/activate
