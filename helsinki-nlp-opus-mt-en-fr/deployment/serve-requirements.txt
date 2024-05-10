@@ -1,0 +1,4 @@
+# Python 3.10
+transformers==4.38.2
+kserve==0.11.2
+ipykernel
