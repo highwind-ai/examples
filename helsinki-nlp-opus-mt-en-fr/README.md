@@ -1,4 +1,4 @@
-# Translate Dyula to French (Hugging Face)
+# Translate English to French (Helsinki-NLP)
 
 An example of a machine translation model that translates English to French. This model is directly used from [this Hugging Face repo](https://huggingface.co/Helsinki-NLP/opus-mt-en-fr) without further training.
 

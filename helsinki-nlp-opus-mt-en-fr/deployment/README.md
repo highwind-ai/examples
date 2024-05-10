@@ -11,7 +11,7 @@ This folder contains the resources required for deploying the trained model onto
 This step builds the Kserve predictor image that contains your model.
 
 1. First, make sure you have the trained model and tokenizer locally available. To get these, you can do one of the following:
-    - Download the files from the [Hugging Face model repo](https://huggingface.co/Helsinki-NLP/opus-mt-tc-big-en-fr) and save them to `saved_model` (in the root directory of this example)
+    - Download the files from the [Hugging Face model repo](https://huggingface.co/Helsinki-NLP/opus-mt-en-fr) and save them to `saved_model` (in the root directory of this example)
     - Run the inference notebooks located in the `notebooks` directory.
 
 1. Copy over the trained model and its definition code into this folder so that it can be baked into the Docker container for serving
