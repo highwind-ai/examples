@@ -1,0 +1,7 @@
+# Python 3.10
+transformers==4.38.2
+# torch==2.3.0 --index-url https://download.pytorch.org/whl/cpu
+https://download.pytorch.org/whl/cpu/torch-2.3.0%2Bcpu-cp310-cp310-linux_x86_64.whl
+sentencepiece==0.2.0
+kserve==0.11.2
+# ipykernel
