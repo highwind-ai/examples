@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "machine-translation"
+version = "0.1.0"
+description = "HuggingFace example for machine translation"
+authors = ["Harry Lee <harry@melio.ai>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+transformers = "^4.38.2"
+datasets = "^2.18.0"
+evaluate = "^0.4.1"
+sacrebleu = "^2.4.0"
+tensorflow = "^2.15.0"
+tf-keras = "^2.15.0"
+kserve = "^0.11.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
