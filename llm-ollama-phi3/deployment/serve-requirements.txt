@@ -1,0 +1,4 @@
+# Python 3.11
+kserve==0.11.2
+langchain
+langchain-community
