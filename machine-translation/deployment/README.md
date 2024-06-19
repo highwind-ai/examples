@@ -45,8 +45,7 @@ This folder contains the resources required for deploying the trained model onto
 
     ```PowerShell
     $json = Get-Content -Raw -Path ./input.json
-    Invoke-WebRequest -Uri http://localhost:8080/v2/models/model/infer -Method Post -ContentType 'application/json' -Body $json
-    $response = Invoke-WebRequest -Uri http://localhost:8080/v2/models/model/infer -Method Post -ContentType 'application/json' -Body $json
+    $response = Invoke-WebRequest -Uri http://localhost:8080/v2/models/model/infer -Method Post -ContentType 'application/json' -Body ([System.Text.Encoding]::UTF8.GetBytes($json))
     $responseObject = $response.Content | ConvertFrom-Json
     $responseObject | ConvertTo-Json -Depth 10
     ```

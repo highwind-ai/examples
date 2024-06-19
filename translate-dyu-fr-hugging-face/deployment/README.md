@@ -49,7 +49,7 @@ This step builds the Kserve predictor image that contains your model.
 
     ```PowerShell
     $json = Get-Content -Raw -Path ./input.json
-    $response = Invoke-WebRequest -Uri http://localhost:8080/v2/models/model/infer -Method Post -ContentType 'application/json' -Body $json
+    $response = Invoke-WebRequest -Uri http://localhost:8080/v2/models/model/infer -Method Post -ContentType 'application/json' -Body ([System.Text.Encoding]::UTF8.GetBytes($json))
     $responseObject = $response.Content | ConvertFrom-Json
     $responseObject | ConvertTo-Json -Depth 10
     ```
