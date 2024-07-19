@@ -37,7 +37,6 @@ Things to ensure before you upload the Python file:
 
     ```py
     # Please either comment out this line, or remove it entirely:
-    #
     # demo.launch()
     ```
 
