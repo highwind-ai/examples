@@ -110,7 +110,7 @@ with gr.Blocks() as demo:
     # button does nothing when running this app locally.
     gr.Button("Logout", link="/logout")
 
-# You can uncomment the flowing line in order to test the Gradio App locally before
+# You can uncomment the following line in order to test the Gradio App locally before
 # Deploying on Highwind.
 #
 # +------------------------------------------------------------------------------------+
