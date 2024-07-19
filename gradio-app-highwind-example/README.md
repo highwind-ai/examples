@@ -6,7 +6,7 @@ using Highwind.
 ## Step 1: Create a Gradio App Asset
 
 1. On Highwind, create a new Asset and select "Gradio App" as the Asset type.
-2. Upload a single python file that follows the format of `demo.py` in this folder.
+2. Upload a single Python file that follows the format of `demo.py` in this folder.
 
 Things to ensure before you upload the Python file:
 
