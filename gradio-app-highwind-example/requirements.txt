@@ -1,2 +1,2 @@
-gradio = "^4.31.4"
-highwind = "1.0.0"
+gradio>=4.31.4
+highwind==1.0.0
