@@ -106,10 +106,6 @@ with gr.Blocks() as demo:
         outputs=flower_type,
     )
 
-    # We include a logout button for when the Gradio App is hosted on Highwind. This
-    # button does nothing when running this app locally.
-    gr.Button("Logout", link="/logout")
-
 # You can uncomment the following line in order to test the Gradio App locally before
 # Deploying on Highwind.
 #
