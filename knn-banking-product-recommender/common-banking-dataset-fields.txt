@@ -1,0 +1,7 @@
+This file contains the common fields for the banking dataset for recommender model
+
+cust_id: unique customer identifier
+date_id: identifying the specific date associated with the data entry
+age: represents the customer age
+sex: represents if the customer is male or female
+owned_products: list of products owned by the customer for the latest date_id
