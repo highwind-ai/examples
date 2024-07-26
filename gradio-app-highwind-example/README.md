@@ -13,7 +13,9 @@ Things to ensure before you upload the Python file:
 1. Ensure that your inference function initializes Highwind with the user's access token:
 
     ```py
+    import gradio as gr
     import highwind
+
 
     def my_inference_function(
         ..., # your model inputs
