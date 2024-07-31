@@ -6,8 +6,8 @@ age: represents the customer age
 gender: represents if the customer is male or female
 gross_income: represents the customer's gross income
 owned_products: list of products owned by the customer for the latest date_id
-banking_product_1: represents if the customer owns this products eg: Credit card
-banking_product_2: represents if the customer owns this products eg: Savings account
-banking_product_3: represents if the customer owns this products eg: Loan
-banking_product_4: represents if the customer owns this products eg: Current Account
+banking_product_1: represents if the customer owns this product eg: Credit card
+banking_product_2: represents if the customer owns this product eg: Savings account
+banking_product_3: represents if the customer owns this product eg: Loan
+banking_product_4: represents if the customer owns this product eg: Current Account
 banking_product_.....
