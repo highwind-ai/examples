@@ -1,4 +1,4 @@
-This file contains the common fields for the banking dataset for recommender model
+This file contains the common fields for the banking dataset for the recommender model
 
 cust_id: unique customer identifier
 date_id: identifying the specific date associated with the data entry
