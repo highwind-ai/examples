@@ -20,3 +20,12 @@ A banking product recommender using a simple knn model.
     source .santander/bin/activate
     ```
 
+ - Use ipykernel to create a new kernel associated with the virtual environment:
+
+    ```shell
+      python -m ipykernel install --user --name=.santander --display-name "Python (.santander)"
+
+    ```
+
+
+
