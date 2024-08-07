@@ -4,7 +4,7 @@ A banking product recommender using a simple knn model.
 
 ## Usage
 
-### Running notebooks
+### Running notebooks and virtual environments
 
  - Set up your environment with the required dependencies.
  - Run the following commands
