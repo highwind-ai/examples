@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  knn_santander_inference_util:
+    container_name: knn_santander_inference_util
+    image: local/highwind-examples/knn-santander-inference:latest
+    platform: linux/amd64
+    command: --model_name=model
+    working_dir: /app
+    ports:
+      - "8080:8080"

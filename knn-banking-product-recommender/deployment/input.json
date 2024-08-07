@@ -1,0 +1,14 @@
+{
+    "inputs": [
+        {
+            "name": "input-0",
+            "shape": [
+                1
+            ],
+            "datatype": "INT32",
+            "data": [
+                15898
+            ]
+        }
+    ]
+}
