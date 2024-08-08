@@ -16,7 +16,7 @@ This step builds the Kserve predictor image that contains your model.
 
         - `download_files.ipynb`: This will download the saved files from HuggingFace into the `saved_model` folder.
 
-1. Copy over the trained model and its definition code into this folder so that it can be baked into the Docker container for serving.
+1. Copy over the saved model folder contents and its definition code into this folder so that it can be baked into the Docker container for serving.
    > **NB:** Ensure you are within the `deployment` folder before running the below command
 
     ```bash
