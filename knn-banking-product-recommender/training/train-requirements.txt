@@ -1,0 +1,9 @@
+# Python 3.9
+numpy==1.24.0
+pandas==2.0.3
+scikit-learn==1.3.0
+joblib==1.3.2
+kfp[all]==2.0.0b15
+huggingface_hub==0.22.2
+urllib3==1.26
+requests-toolbelt==0.10.1
