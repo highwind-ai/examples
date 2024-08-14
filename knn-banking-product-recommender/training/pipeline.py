@@ -88,7 +88,7 @@ def ml_process(
 def knn_pipeline() -> None:
     ml_op = (
         ml_process(
-            access_token="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",
+            access_token="",  # add access_token from HuggingFace
         )
         .set_display_name("ml-process")
         .set_memory_request("6G")
