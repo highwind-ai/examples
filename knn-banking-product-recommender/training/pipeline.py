@@ -3,6 +3,7 @@
 from kfp import dsl
 from data_prep import preprocess_data
 from feature_engineering import feature_engineering
+from model_training import train_knn_model
 
 
 @dsl.component(
@@ -21,8 +22,12 @@ def ml_process(
     access_token: str,
     train_output_filename: str,
     test_output_filename: str,
+    test_ids_output_filename: str,
     pca_output_filename: str,
     scaler_output_filename: str,
+    model_output_filename: str,
+    distances_output_filename: str,
+    indices_output_filename: str,
 ) -> None:
 
     # Define imports and constants
@@ -37,13 +42,14 @@ def ml_process(
     df_train_cleaned, ds_test_renamed = preprocess_data(access_token)
     print("Data preprocessing complete.")
 
+    # Encode pre-processed data
     print("Starting feature engineering process....")
     df_train_pca, df_test_pca, df_train_encoded, df_test_encoded, scaler, pca = (
         feature_engineering(df_train_cleaned, ds_test_renamed, 25)
     )
 
     train_save_path = os.path.join(artifact_output_dir.path, train_output_filename)
-    print(f"Saving enocded train set to: {train_save_path}")
+    print(f"Saving encoded train set to: {train_save_path}")
     joblib.dump(df_train_encoded, train_save_path)
 
     test_save_path = os.path.join(artifact_output_dir.path, test_output_filename)
@@ -60,6 +66,35 @@ def ml_process(
 
     print("Feature engineering processing and saving complete.")
 
+    # Initialize and fit the KNN model
+    print("Initialize and fit the KNN model starting....")
+
+    df_test_ids, knn, distances, indices = train_knn_model(
+        df_train_pca, df_test_pca, df_test_encoded, 5
+    )
+
+    test_ids_save_path = os.path.join(
+        artifact_output_dir.path, test_ids_output_filename
+    )
+    print(f"Saving encoded test set to: {test_ids_save_path}")
+    joblib.dump(df_test_ids, test_ids_save_path)
+
+    model_save_path = os.path.join(artifact_output_dir.path, model_output_filename)
+    print(f"Saving model to: {model_save_path}")
+    joblib.dump(knn, model_save_path)
+
+    distance_save_path = os.path.join(
+        artifact_output_dir.path, distances_output_filename
+    )
+    print(f"Saving model distances to: {distance_save_path}")
+    joblib.dump(distances, distance_save_path)
+
+    indice_save_path = os.path.join(artifact_output_dir.path, indices_output_filename)
+    print(f"Saving model indices to: {indice_save_path}")
+    joblib.dump(indices, indice_save_path)
+
+    print("KNN model fitting and saving complete.")
+
 
 @dsl.pipeline(
     name="santander-knn-product-recommendation",
@@ -69,11 +104,15 @@ def ml_process(
 def knn_pipeline() -> None:
     ml_op = (
         ml_process(
-            access_token="",  # add access_token from HuggingFace
+            access_token="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",  # add access_token from HuggingFace
             train_output_filename="train_for_predictions.csv",
             test_output_filename="test_for_predictions.csv",
+            test_ids_output_filename="df_encoded_test_ids.csv",
             pca_output_filename="pca.joblib",
             scaler_output_filename="scaler.joblib",
+            model_output_filename="model.joblib",
+            distances_output_filename="distances.joblib",
+            indices_output_filename="indices.joblib",
         )
         .set_display_name("ml-process")
         .set_memory_request("6G")
