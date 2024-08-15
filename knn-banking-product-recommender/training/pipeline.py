@@ -2,6 +2,7 @@
 
 from kfp import dsl
 from data_prep import preprocess_data
+from feature_engineering import feature_engineering
 
 
 @dsl.component(
@@ -18,8 +19,10 @@ from data_prep import preprocess_data
 def ml_process(
     artifact_output_dir: dsl.Output[dsl.Artifact],
     access_token: str,
-    # model_output_filename: str,
-    # knn_indices_output_filename: str,
+    train_output_filename: str,
+    test_output_filename: str,
+    pca_output_filename: str,
+    scaler_output_filename: str,
 ) -> None:
 
     # Define imports and constants
@@ -30,54 +33,32 @@ def ml_process(
     print(f"Creating output dir: {artifact_output_dir.path}")
     os.makedirs(artifact_output_dir.path, exist_ok=True)
 
-    print("Starting loading and pre-processing datasets from HuggingFace")
+    print("Starting loading and pre-processing datasets from HuggingFace....")
     df_train_cleaned, ds_test_renamed = preprocess_data(access_token)
+    print("Data preprocessing complete.")
 
-    # Save processed data
-    df_train_cleaned_path = os.path.join(artifact_output_dir.path, "train_cleaned.csv")
-    ds_test_renamed_path = os.path.join(artifact_output_dir.path, "test_data.csv")
-
-    df_train_cleaned.to_csv(df_train_cleaned_path, index=False)
-    ds_test_renamed.to_csv(ds_test_renamed_path, index=False)
-
-    print("Data preprocessing and saving complete.")
-
-
-"""  train_data_path = os.path.join(input_data_dir.path, train_data_file_name)
-    print(f"Loading train data from: {train_data_path}")
-    train_df = pd.read_csv(train_data_path)
-
-    test_data_path = os.path.join(input_data_dir.path, test_data_file_name)
-    print(f"Loading test data from: {test_data_path}")
-    test_df = pd.read_csv(train_data_path)
-
-    # Stopped here
-
-    os.makedirs(model_path.path, exist_ok=True)
-
-    # Load OPUS Books dataset
-    books = read_data("opus_books", "en-fr")
-
-    # Pre-process the data
-    checkpoint = "t5-small"
-    tokenizer = AutoTokenizer.from_pretrained(checkpoint)
-
-    # Tokenize the dataset
-    tokenized_books = books.map(preprocess_data, batched=True)
-
-    # Create data collator for seq2seq model
-    data_collator = DataCollatorForSeq2Seq(
-        tokenizer=tokenizer, model=checkpoint, return_tensors="tf"
+    print("Starting feature engineering process....")
+    df_train_pca, df_test_pca, df_train_encoded, df_test_encoded, scaler, pca = (
+        feature_engineering(df_train_cleaned, ds_test_renamed, 25)
     )
 
-    # Train the model
-    trained_model_path = train_model(
-        tokenized_books["train"],
-        tokenized_books["test"],
-        data_collator,
-        model_path.path,
-    )
-    """
+    train_save_path = os.path.join(artifact_output_dir.path, train_output_filename)
+    print(f"Saving enocded train set to: {train_save_path}")
+    joblib.dump(df_train_encoded, train_save_path)
+
+    test_save_path = os.path.join(artifact_output_dir.path, test_output_filename)
+    print(f"Saving encoded test set to: {test_save_path}")
+    joblib.dump(df_test_encoded, test_save_path)
+
+    scaler_save_path = os.path.join(artifact_output_dir.path, scaler_output_filename)
+    print(f"Saving scaler to: {scaler_save_path}")
+    joblib.dump(scaler, scaler_save_path)
+
+    pca_save_path = os.path.join(artifact_output_dir.path, pca_output_filename)
+    print(f"Saving pca to: {pca_save_path}")
+    joblib.dump(pca, pca_save_path)
+
+    print("Feature engineering processing and saving complete.")
 
 
 @dsl.pipeline(
@@ -89,6 +70,10 @@ def knn_pipeline() -> None:
     ml_op = (
         ml_process(
             access_token="",  # add access_token from HuggingFace
+            train_output_filename="train_for_predictions.csv",
+            test_output_filename="test_for_predictions.csv",
+            pca_output_filename="pca.joblib",
+            scaler_output_filename="scaler.joblib",
         )
         .set_display_name("ml-process")
         .set_memory_request("6G")
