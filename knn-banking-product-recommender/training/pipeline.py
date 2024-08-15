@@ -104,7 +104,7 @@ def ml_process(
 def knn_pipeline() -> None:
     ml_op = (
         ml_process(
-            access_token="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",  # add access_token from HuggingFace
+            access_token="",  # add access_token from HuggingFace
             train_output_filename="train_for_predictions.csv",
             test_output_filename="test_for_predictions.csv",
             test_ids_output_filename="df_encoded_test_ids.csv",
