@@ -8,9 +8,9 @@ from model_training import train_knn_model
 
 @dsl.component(
     base_image="python:3.10-bookworm",
-    target_image="637423190872.dkr.ecr.eu-west-1.amazonaws.com/highwind/ef620ece-2b04-4f7e-8932-31dd3ba63e03/ff127876-449c-4036-91d7-af54ebfc5af7:latest",
+    target_image="637423190872.dkr.ecr.eu-west-1.amazonaws.com/highwind/ef620ece-2b04-4f7e-8932-31dd3ba63e03/ff127876-449c-4036-91d7-af54ebfc5af7:v1",
     packages_to_install=[
-        "numpy",
+        "numpy==1.24.0",
         "pandas==2.0.3",
         "scikit-learn==1.3.0",
         "joblib==1.3.2",

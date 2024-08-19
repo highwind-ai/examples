@@ -21,12 +21,12 @@ The training folder utilizes KFP's [Containerized Python Components](https://www
 
     # Initial setup
 
-    python -m venv .santander && source .santander/bin/activate
-    pip install -r requirements.txt
+    python -m venv .train && source .train/bin/activate
+    pip install -r training/train-requirements.txt
 
     # Activate after setup (run every time)
 
-    source .santander/bin/activate
+    source .train/bin/activate
     ```
 
 - Navigate within the `training` folder to complile the pipeline script by running the following:
