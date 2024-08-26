@@ -40,13 +40,23 @@ This step builds the Kserve predictor image that contains your model.
 
 1. Finally, send a payload to your model to test its response. To do this, use the `curl` command to send a `POST` request with an example JSON payload.
 
-    > Run this from another terminal (remember to navigate to this folder first)
+    **NB:** Run this from another terminal (remember to navigate to this folder first)
 
     Linux/Mac Bash/zsh
 
     ```bash
     curl -X POST http://localhost:8080/v2/models/model/infer -H 'Content-Type: application/json' -d @./input.json
     ```
+
+    - It may take a **few seconds** for the server to start. To verify that the server is running, you can execute the following command:
+
+        ```bash
+        curl http://localhost:8080/
+        ```
+
+    - If you see `{"status":"alive"}%`, the server is ready, and you can proceed to test the response.
+
+
 
     Windows PowerShell
 
