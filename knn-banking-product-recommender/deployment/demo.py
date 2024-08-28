@@ -85,10 +85,10 @@ with gr.Blocks() as demo:
     )
     submit_button = gr.Button("Submit", variant="primary")
     submit_button.click(
-        fn=get_mock_product_recommendation,  # Choose mock or real inference function
+        fn=get_product_recommendation,  # Choose mock or real inference function
         inputs=[user_id],
         outputs=[output],
     )
 
 # For local testing
-demo.launch()
+# demo.launch()
