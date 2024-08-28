@@ -1,0 +1,3 @@
+# Python 3.12
+gradio>=4.31.4
+highwind==1.0.0
