@@ -99,12 +99,15 @@ The Gradio app is a simple graphical interface for testing the model. It is not 
 
 ### Deploying the app on Highwind
 
+1. Create a new Highwind Use Case
+    1. On Highwind, create a new Use Case without adding any assets to it
+
 1. Create a Gradio Asset on Highwind
-    1. On Highwind, create a new Asset and select "Gradio App" as the Asset type.
-    2. Upload the `demo.py` to this asset.
+    1. Update the `USE_CASE_ID` variable in the `demo.py` file to the ID of the Use Case you created in the previous step
+    2. On Highwind, create a new Asset and select "Gradio App" as the Asset type.
+    3. Upload the `demo.py` to this asset.
         > ⚠️ Warning: Remember to comment the `demo.launch()` line of the `demo.py` before uploading to Highwind.
 
-1. Create a new Highwind Use Case
-    1. On Highwind, create a new Use Case
-    2. Add the Asset that you created to the Use Case
-    3. When viewing the Use Case, the Gradio App should now be visible
+1. Link the Gradio Asset to the Use Case
+    1. Add the Asset that you created to the Use Case
+    2. When viewing the Use Case, the Gradio App should now be visible
