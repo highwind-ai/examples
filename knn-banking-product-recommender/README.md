@@ -10,7 +10,7 @@ A banking product recommender using a simple knn model.
  - Run the following commands
 
     ```shell
-    # Use Python 3.11
+    # Use Python 3.9
 
     # Initial setup
     python -m venv .santander && source .santander/bin/activate
@@ -27,5 +27,16 @@ A banking product recommender using a simple knn model.
 
     ```
 
+### Model serving and inference
 
+-  Set up the serve environment by running the following:
+   ```shell
+   python -m venv .serve.venv && source .serve.venv/bin/activate
+   pip install -r deployment/serve-requirements.txt
+   ```
+
+-  Activate after setup (run every time)
+   ```shell
+   source .serve.venv/bin/activate
+   ```
 
