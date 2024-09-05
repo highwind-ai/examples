@@ -48,7 +48,7 @@ This step builds the Kserve predictor image that contains your model.
     curl -X POST http://localhost:8080/v2/models/model/infer -H 'Content-Type: application/json' -d @./input.json
     ```
 
-    - It may take a **few seconds** for the server to start. To verify that the server is running, you can execute the following command:
+    - You might see `curl: (52) Empty reply from server` this could be due to the server still starting. It may take a **few seconds - minutes** for the server to start. To verify that the server is running, you can execute the following command:
 
         ```bash
         curl http://localhost:8080/
