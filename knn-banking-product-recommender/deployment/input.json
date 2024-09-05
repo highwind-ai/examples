@@ -3,11 +3,12 @@
         {
             "name": "input-0",
             "shape": [
-                1
+                2
             ],
-            "datatype": "INT32",
+            "datatype": "INT64",
             "data": [
-                15898
+                1219564,
+                3
             ]
         }
     ]
