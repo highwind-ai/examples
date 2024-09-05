@@ -1,4 +1,4 @@
-# Python 3.11
+# Python 3.9
 numpy
 pandas
 scikit-learn
